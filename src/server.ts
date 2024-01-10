@@ -1,5 +1,6 @@
-console.log('Auth Service');
+// console.log('Auth Service');
 function nextt() {
+    // console.log('TEST');
     return true;
 }
 
