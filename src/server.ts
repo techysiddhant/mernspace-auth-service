@@ -1,4 +1,4 @@
-console.log("Auth Service");
+console.log('Auth Service');
 function nextt() {
     return true;
 }
