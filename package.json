@@ -1,0 +1,11 @@
+{
+  "name": "auth-service",
+  "version": "1.0.0",
+  "description": "a user management service",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node src/server.js"
+  },
+  "author": "techysiddhant",
+  "license": "ISC"
+}
