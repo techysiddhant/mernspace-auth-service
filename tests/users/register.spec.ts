@@ -26,8 +26,8 @@ describe('POST /auth/register', () => {
             const userData = {
                 firstName: 'Siddhant',
                 lastName: 'Jain',
-                email: 'test@sid.com',
-                password: 'p@90189',
+                email: 'sid@test.com',
+                password: 'password',
             };
             // Act
             const response = await request(app)
@@ -42,8 +42,8 @@ describe('POST /auth/register', () => {
             const userData = {
                 firstName: 'Siddhant',
                 lastName: 'Jain',
-                email: 'test@sid.com',
-                password: 'p@90189',
+                email: 'sid@test.com',
+                password: 'password',
             };
             // Act
             const response = await request(app)
@@ -60,8 +60,8 @@ describe('POST /auth/register', () => {
             const userData = {
                 firstName: 'Siddhant',
                 lastName: 'Jain',
-                email: 'test@sid.com',
-                password: 'p@90189',
+                email: 'sid@test.com',
+                password: 'password',
             };
             // Act
             await request(app).post('/auth/register').send(userData);
@@ -78,8 +78,8 @@ describe('POST /auth/register', () => {
             const userData = {
                 firstName: 'Siddhant',
                 lastName: 'Jain',
-                email: 'test@sid.com',
-                password: 'p@90189',
+                email: 'sid@test.com',
+                password: 'password',
             };
             // Act
             const response = await request(app)
@@ -99,8 +99,8 @@ describe('POST /auth/register', () => {
             const userData = {
                 firstName: 'Siddhant',
                 lastName: 'Jain',
-                email: 'test@sid.com',
-                password: 'p@90189',
+                email: 'sid@test.com',
+                password: 'password',
             };
             // Act
             await request(app).post('/auth/register').send(userData);
@@ -115,8 +115,8 @@ describe('POST /auth/register', () => {
             const userData = {
                 firstName: 'Siddhant',
                 lastName: 'Jain',
-                email: 'test@sid.com',
-                password: 'p@90189',
+                email: 'sid@test.com',
+                password: 'password',
             };
             // Act
             await request(app).post('/auth/register').send(userData);
@@ -133,8 +133,8 @@ describe('POST /auth/register', () => {
             const userData = {
                 firstName: 'Siddhant',
                 lastName: 'Jain',
-                email: 'test@sid.com',
-                password: 'p@90189',
+                email: 'sid@test.com',
+                password: 'password',
             };
             const userRepository = connection.getRepository(User);
             await userRepository.save({ ...userData, role: Roles.CUSTOMER });
@@ -155,7 +155,62 @@ describe('POST /auth/register', () => {
                 firstName: 'Siddhant',
                 lastName: 'Jain',
                 email: '',
-                password: 'p@90189',
+                password: 'password',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+            //Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+
+        it('should return 400 status code if firstName field is missing', async () => {
+            // Arange
+            const userData = {
+                firstName: '',
+                lastName: 'Jain',
+                email: 'sid@test.com',
+                password: 'password',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+            //Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it('should return 400 status code if lastName field is missing', async () => {
+            // Arange
+            const userData = {
+                firstName: 'Siddhant',
+                lastName: '',
+                email: 'sid@test.com',
+                password: 'password',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+            //Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it('should return 400 status code if password field is missing', async () => {
+            // Arange
+            const userData = {
+                firstName: 'Siddhant',
+                lastName: 'Jain',
+                email: 'sid@test.com',
+                password: '',
             };
             // Act
             const response = await request(app)
@@ -175,8 +230,8 @@ describe('POST /auth/register', () => {
             const userData = {
                 firstName: 'Siddhant',
                 lastName: 'Jain',
-                email: ' sid@siddhant.com ',
-                password: 'p@90189',
+                email: ' sid@test.com ',
+                password: 'password',
             };
             // Act
             await request(app).post('/auth/register').send(userData);
@@ -184,7 +239,62 @@ describe('POST /auth/register', () => {
             const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
             const user = users[0];
-            expect(user.email).toBe('sid@siddhant.com');
+            expect(user.email).toBe('sid@test.com');
+        });
+        it('should return 400 status code if email is not a valid', async () => {
+            // Arange
+            const userData = {
+                firstName: 'Siddhant',
+                lastName: 'Jain',
+                email: 'test',
+                password: 'password',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+            //Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it('should return 400 status code if password length is less than 8 chars', async () => {
+            // Arange
+            const userData = {
+                firstName: 'Siddhant',
+                lastName: 'Jain',
+                email: 'sid@test.com',
+                password: 'pass',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+            //Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it('shoud return an array of error messages if email is missing', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Siddhant',
+                lastName: 'Jain',
+                email: '',
+                password: 'password',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            // Assert
+            expect(response.body).toHaveProperty('errors');
+            expect(
+                (response.body as Record<string, string>).errors.length,
+            ).toBeGreaterThan(0);
         });
     });
 });
