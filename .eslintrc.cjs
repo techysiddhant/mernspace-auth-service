@@ -16,6 +16,6 @@ module.exports = {
     root: true,
     rules: {
         'no-console': 'error',
-        '@typescript-eslint/no-misused-promises': 0,
+        // '@typescript-eslint/no-misused-promises': 0,
     },
 };
