@@ -6,6 +6,11 @@ const logger = winston.createLogger({
     defaultMeta: {
         serviceName: 'auth-service',
     },
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json(),
+        winston.format.colorize(),
+    ),
     transports: [
         new winston.transports.File({
             dirname: 'logs',
@@ -23,11 +28,6 @@ const logger = winston.createLogger({
 
         new winston.transports.Console({
             level: 'info',
-            format: winston.format.combine(
-                winston.format.timestamp(),
-                winston.format.json(),
-                winston.format.colorize(),
-            ),
         }),
     ],
 });
