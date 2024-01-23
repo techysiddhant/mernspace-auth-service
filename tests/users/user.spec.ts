@@ -76,5 +76,42 @@ describe('GET /auth/self', () => {
 
             expect((response.body as Record<string, string>).id).toBe(data.id);
         });
+        it('should not return the password field', async () => {
+            //register user
+            // Arrange
+            const userData = {
+                firstName: 'Siddhant',
+                lastName: 'Jain',
+                email: 'sid@test.com',
+                password: 'password',
+            };
+
+            const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+            const userRepository = connection.getRepository(User);
+            const data = await userRepository.save({
+                ...userData,
+                password: hashedPassword,
+                role: Roles.CUSTOMER,
+            });
+            // generate token
+            const accessToken = jwks.token({
+                sub: String(data.id),
+                role: data.role,
+            });
+            // add token to cookie
+            // Act
+            const response = await request(app)
+                .get('/auth/self')
+                .set('Cookie', [`accessToken=${accessToken}`])
+                .send();
+
+            // assert
+            // check if user  id matches with registered user
+
+            expect(response.body as Record<string, string>).not.toHaveProperty(
+                'password',
+            );
+        });
     });
 });
