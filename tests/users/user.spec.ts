@@ -113,5 +113,30 @@ describe('GET /auth/self', () => {
                 'password',
             );
         });
+
+        it('should return 401 status if token does not exists', async () => {
+            //register user
+            // Arrange
+            const userData = {
+                firstName: 'Siddhant',
+                lastName: 'Jain',
+                email: 'sid@test.com',
+                password: 'password',
+            };
+
+            const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+            const userRepository = connection.getRepository(User);
+            await userRepository.save({
+                ...userData,
+                password: hashedPassword,
+                role: Roles.CUSTOMER,
+            });
+            // Act
+            const response = await request(app).get('/auth/self').send();
+
+            // assert
+            expect(response.statusCode).toBe(401);
+        });
     });
 });
